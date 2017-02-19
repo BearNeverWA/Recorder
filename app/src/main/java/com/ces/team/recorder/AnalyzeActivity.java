@@ -63,7 +63,7 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
             }
         });
         pieChart = (PieChart) findViewById(R.id.pie_chart);
-        toolbarAnalyze= (Toolbar) findViewById(R.id.toolbar_analyze);
+        toolbarAnalyze = (Toolbar) findViewById(R.id.toolbar_analyze);
         setSupportActionBar(toolbarAnalyze);
         toolbarAnalyze.setTitle("");
         toolbarAnalyze.setNavigationOnClickListener(new View.OnClickListener() {

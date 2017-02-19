@@ -32,10 +32,10 @@
         </android.support.v7.widget.Toolbar>
 
         <LinearLayout
+            style="?attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#fff"
-            style="?attr/buttonBarButtonStyle"
             android:orientation="horizontal">
 
             <Button
@@ -51,8 +51,8 @@
                 android:textColor="#fff" />
 
             <Button
-                style="?attr/buttonBarButtonStyle"
                 android:id="@+id/btn_jump_memo"
+                style="?attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
