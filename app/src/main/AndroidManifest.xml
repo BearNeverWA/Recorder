@@ -16,8 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AnalyzeActivity" />
-        <activity android:name=".MemoActivity" />
+        <activity
+            android:name=".AnalyzeActivity"
+            android:label="" />
+        <activity
+            android:name=".MemoActivity"
+            android:label="" />
     </application>
 
 </manifest>

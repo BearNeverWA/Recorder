@@ -3,6 +3,7 @@ package com.ces.team.recorder;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,7 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
     Button btnQuery, btnQueryMonth;
     PieChart pieChart;
     int dataInput;
+    Toolbar toolbarAnalyze;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,15 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
             }
         });
         pieChart = (PieChart) findViewById(R.id.pie_chart);
+        toolbarAnalyze= (Toolbar) findViewById(R.id.toolbar_analyze);
+        setSupportActionBar(toolbarAnalyze);
+        toolbarAnalyze.setTitle("");
+        toolbarAnalyze.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AnalyzeActivity.this.finish();
+            }
+        });
         init();
     }
 
