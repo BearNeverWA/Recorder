@@ -52,6 +52,9 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
                         else if (dataInput <= 31 && dataInput >= 1)
                             Toast.makeText(AnalyzeActivity.this, dataInput + "", Toast.LENGTH_SHORT).show();
                     }
+                    else if (strInput.length()==0){
+                        Toast.makeText(AnalyzeActivity.this,"Input cannot be blank",Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -60,6 +63,7 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
             public void onClick(View v) {
                 //获取月份然后查询数据库
                 //一样最好使用新线程操作
+                Toast.makeText(AnalyzeActivity.this,"Query this month",Toast.LENGTH_SHORT).show();
             }
         });
         pieChart = (PieChart) findViewById(R.id.pie_chart);
