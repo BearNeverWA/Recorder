@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,11 +16,11 @@ import android.widget.TextView;
 public class MemoAdapter extends BaseAdapter {
     private Context context;
     private Cursor cursor;
-    LinearLayout layout;
+    private LinearLayout layout;
 
-    public MemoAdapter(Context context,Cursor cursor){
-        this.context=context;
-        this.cursor=cursor;
+    public MemoAdapter(Context context, Cursor cursor) {
+        this.context = context;
+        this.cursor = cursor;
     }
 
     @Override
@@ -42,14 +41,13 @@ public class MemoAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        LayoutInflater inflater=LayoutInflater.from(context);
-        layout= (LinearLayout) inflater.inflate(R.layout.content_list_memo,null);
-        TextView tvContent= (TextView) layout.findViewById(R.id.content_list_memo);
-        TextView tvTime= (TextView) layout.findViewById(R.id.time_list_memo);
-        ImageView ivIcon= (ImageView) layout.findViewById(R.id.iv_add_new_memo);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        layout = (LinearLayout) inflater.inflate(R.layout.content_list_memo, null);
+        TextView tvContent = (TextView) layout.findViewById(R.id.content_list_memo);
+        TextView tvTime = (TextView) layout.findViewById(R.id.time_list_memo);
         cursor.moveToPosition(position);
-        String content=cursor.getString(cursor.getColumnIndex("content_memo"));
-        String time=cursor.getString(cursor.getColumnIndex("time_memo"));
+        String content = cursor.getString(cursor.getColumnIndex("content"));
+        String time = cursor.getString(cursor.getColumnIndex("time"));
         tvContent.setText(content);
         tvTime.setText(time);
         return layout;

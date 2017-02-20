@@ -10,10 +10,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MemoDB extends SQLiteOpenHelper {
     public static final String TABLE_NAME = "memo";
-    public static final String CONTENT = "content_memo";
-    public static final String PATH = "path";
-    public static final String ID = "_id_memo";
-    public static final String TIME = "time_memo";
+    public static final String CONTENT = "content";
+    public static final String ID = "_id";
+    public static final String TIME = "time";
 
     public MemoDB(Context context) {
         super(context, "memo", null, 1);
@@ -21,11 +20,10 @@ public class MemoDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_NAME + "("
+        db.execSQL("create table " + TABLE_NAME + " ("
                 + ID + " integer primary key autoincrement,"
                 + CONTENT + " text not null,"
-                + TIME + " text not null,"
-                + PATH + " text not null)");
+                + TIME + " text not null)");
     }
 
     @Override

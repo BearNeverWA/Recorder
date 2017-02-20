@@ -22,6 +22,7 @@ public class MemoActivity extends AppCompatActivity {
     MemoAdapter memoAdapter;
     MemoDB memoDB;
     SQLiteDatabase dbReader;
+    Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class MemoActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(MemoActivity.this, AddNewMemo.class);
-                                intent.putExtra("flag", 2);
+                                intent.putExtra("flag", "2");
                                 startActivity(intent);
 
                             }
@@ -72,7 +73,7 @@ public class MemoActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(MemoActivity.this, AddNewMemo.class);
-                                intent.putExtra("flag", 1);
+                                intent.putExtra("flag", "1");
                                 startActivity(intent);
                             }
                         }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -89,7 +90,7 @@ public class MemoActivity extends AppCompatActivity {
     }
 
     public void selectDB() {
-        Cursor cursor = dbReader.query(MemoDB.TABLE_NAME, null, null, null, null, null, null);
+        cursor = dbReader.query(MemoDB.TABLE_NAME, null, null, null, null, null, MemoDB.TIME+" desc");
         memoAdapter = new MemoAdapter(this, cursor);
         listMemo.setAdapter(memoAdapter);
     }
