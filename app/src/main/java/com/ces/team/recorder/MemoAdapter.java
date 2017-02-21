@@ -49,7 +49,8 @@ public class MemoAdapter extends BaseAdapter {
         String content = cursor.getString(cursor.getColumnIndex("content"));
         String time = cursor.getString(cursor.getColumnIndex("time"));
         tvContent.setText(content);
-        tvTime.setText(time);
+        String timeFinal="上次修改:"+time;
+        tvTime.setText(timeFinal);
         return layout;
     }
 }

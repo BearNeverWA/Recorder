@@ -39,6 +39,7 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent=new Intent(MemoActivity.this,MemoDetail.class);
                 intent.putExtra(MemoDB.ID,cursor.getInt(cursor.getColumnIndex(MemoDB.ID)));
                 intent.putExtra(MemoDB.CONTENT,cursor.getString(cursor.getColumnIndex(MemoDB.CONTENT)));
+                startActivity(intent);
             }
         });
         toolbarMemo = (Toolbar) findViewById(R.id.toolbar_memo);
@@ -51,7 +52,7 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void selectDB() {
-        cursor = dbReader.query(MemoDB.TABLE_NAME, null, null, null, null, null, MemoDB.TIME+" desc");
+        cursor = dbReader.query(MemoDB.TABLE_NAME, null, null, null, null, null, MemoDB.ID+" desc");
         memoAdapter = new MemoAdapter(this, cursor);
         listMemo.setAdapter(memoAdapter);
     }

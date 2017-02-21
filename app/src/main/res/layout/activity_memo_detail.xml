@@ -46,7 +46,7 @@
             android:layout_margin="5dp"
             android:text="删除"
             android:textColor="#fff"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/btn_confirm_edd_memo"
@@ -57,7 +57,7 @@
             android:gravity="end|center"
             android:text="保存"
             android:textColor="#fff"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
 
     </android.support.v7.widget.Toolbar>
 
