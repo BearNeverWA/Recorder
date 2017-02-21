@@ -19,7 +19,6 @@ import java.util.zip.Inflater;
 public class AddNewMemo extends AppCompatActivity implements View.OnClickListener {
     String flagGet;
     EditText etAddNewMemo;
-    ImageView ivAddNewMemo;
     Button btnCancelAddNewMemo, btnConfirmAddNewMemo;
     Toolbar toolbar;
     MemoDB memoDB;
@@ -31,7 +30,6 @@ public class AddNewMemo extends AppCompatActivity implements View.OnClickListene
         setContentView(R.layout.activity_add_new_memo);
         flagGet = getIntent().getStringExtra("flag");
         etAddNewMemo = (EditText) findViewById(R.id.et_add_new_memo);
-        ivAddNewMemo = (ImageView) findViewById(R.id.iv_add_new_memo);
         btnCancelAddNewMemo = (Button) findViewById(R.id.btn_cancel_add_new_memo);
         btnCancelAddNewMemo.setOnClickListener(this);
         btnConfirmAddNewMemo = (Button) findViewById(R.id.btn_confirm_add_new_memo);

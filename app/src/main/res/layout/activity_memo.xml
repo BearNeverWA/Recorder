@@ -14,8 +14,18 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:navigationIcon="@mipmap/ic_launcher"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <Button
+            android:id="@+id/btn_back_activity_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:background="@null"
+            android:gravity="start|center"
+            android:text="返回"
+            android:textColor="#fff"
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -24,6 +34,18 @@
             android:text="轻松忆"
             android:textColor="#fff"
             android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_new_memo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@null"
+            android:gravity="end|center"
+            android:text="新建"
+            android:layout_marginRight="15dp"
+            android:textColor="#fff"
+            android:textSize="18sp" />
 
     </android.support.v7.widget.Toolbar>
 

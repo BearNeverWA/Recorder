@@ -10,18 +10,27 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".AnalyzeActivity"
-            android:label="" />
+            android:label=""
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MemoActivity"
-            android:label="" />
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AddNewMemo"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity android:name=".MemoDetail"></activity>
     </application>
 
 </manifest>
