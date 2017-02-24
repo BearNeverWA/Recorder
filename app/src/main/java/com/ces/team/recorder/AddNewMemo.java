@@ -48,8 +48,13 @@ public class AddNewMemo extends AppCompatActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.btn_confirm_add_new_memo:
-                addDB();
-                finish();
+                if (etAddNewMemo.getText().toString().length() == 0)
+                    Toast.makeText(AddNewMemo.this, "备忘不能为空,请您输入备忘内容", Toast.LENGTH_SHORT).show();
+                else {
+                    addDB();
+                    finish();
+                }
+                break;
         }
     }
 
