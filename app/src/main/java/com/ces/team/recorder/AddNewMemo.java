@@ -61,7 +61,7 @@ public class AddNewMemo extends AppCompatActivity implements View.OnClickListene
     }
 
     public String getTime() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
         Date date = new Date();
         return format.format(date);
     }
