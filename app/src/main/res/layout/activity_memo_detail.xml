@@ -17,7 +17,7 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <Button
-            android:id="@+id/back_memo_list"
+            android:id="@+id/btn_back_memo_list"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
@@ -41,15 +41,15 @@
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
+            android:layout_margin="5dp"
             android:background="@null"
             android:gravity="center"
-            android:layout_margin="5dp"
             android:text="删除"
             android:textColor="#fff"
             android:textSize="15sp" />
 
         <Button
-            android:id="@+id/btn_confirm_edd_memo"
+            android:id="@+id/btn_save_edit_memo"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -60,5 +60,15 @@
             android:textSize="15sp" />
 
     </android.support.v7.widget.Toolbar>
+
+    <EditText
+        android:id="@+id/et_memo_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:hint="test"
+        android:padding="20dp"
+        android:textColor="#000"
+        android:textSize="20sp" />
 
 </LinearLayout>
