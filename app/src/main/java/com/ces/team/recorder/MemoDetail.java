@@ -1,6 +1,8 @@
 package com.ces.team.recorder;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.util.Calendar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,6 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MemoDetail extends AppCompatActivity implements View.OnClickListener{
     EditText etMemoDetail;
@@ -23,6 +28,8 @@ public class MemoDetail extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_detail);
         isChanged=false;
+        memeDB=new MemoDB(this);
+        dbWriter=memeDB.getWritableDatabase();
         btnSave= (Button) findViewById(R.id.btn_save_edit_memo);
         btnSave.setOnClickListener(this);
         btnDelete= (Button) findViewById(R.id.btn_delete_memo);
@@ -63,9 +70,12 @@ public class MemoDetail extends AppCompatActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.btn_save_edit_memo:
-                //这里添加修改数据库的操作,可以用DB的update方法
-                if (isChanged)
-
+                if (isChanged){
+                    updateDB();
+                    finish();
+                }else {
+                    finish();
+                }
                 break;
             case R.id.btn_delete_memo:
                 //数据库delete操作
@@ -76,7 +86,20 @@ public class MemoDetail extends AppCompatActivity implements View.OnClickListene
     }
 
     public void updateDB(){
+        ContentValues cv=new ContentValues();
+        cv.put(MemoDB.CONTENT,etMemoDetail.getText().toString());
+        cv.put(MemoDB.TIME,getTime());
+//        dbWriter.update(MemoDB.TABLE_NAME,cv,"_id=?",)
+    }
 
+    public void deleteDB(){
+
+    }
+
+    public String getTime(){
+        SimpleDateFormat format=new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+        Date date=new Date();
+        return format.format(date);
     }
     
 }
