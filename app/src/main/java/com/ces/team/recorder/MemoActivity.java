@@ -16,7 +16,7 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
     ListView listMemo;
     Toolbar toolbarMemo;
     MemoAdapter memoAdapter;
-    MemoDB memoDB;
+    CommonDB memoDB;
     SQLiteDatabase dbReader;
     Cursor cursor;
     Button btnBackMain,btnAddNewMemo;
@@ -35,22 +35,22 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 cursor.moveToPosition(position);
                 Intent intent=new Intent(MemoActivity.this,MemoDetail.class);
-                intent.putExtra(MemoDB.ID,cursor.getInt(cursor.getColumnIndex(MemoDB.ID)));
-                intent.putExtra(MemoDB.CONTENT,cursor.getString(cursor.getColumnIndex(MemoDB.CONTENT)));
+                intent.putExtra(CommonDB.MEMO_ID,cursor.getInt(cursor.getColumnIndex(CommonDB.MEMO_ID)));
+                intent.putExtra(CommonDB.MEMO_CONTENT,cursor.getString(cursor.getColumnIndex(CommonDB.MEMO_CONTENT)));
                 startActivity(intent);
             }
         });
         toolbarMemo = (Toolbar) findViewById(R.id.toolbar_memo);
         setSupportActionBar(toolbarMemo);
         toolbarMemo.setTitle("");
-        memoDB = new MemoDB(this);
+        memoDB = new CommonDB(this);
         dbReader = memoDB.getReadableDatabase();
     }
 
 
 
     public void selectDB() {
-        cursor = dbReader.query(MemoDB.TABLE_NAME, null, null, null, null, null, MemoDB.ID+" desc");
+        cursor = dbReader.query(CommonDB.MEMO_TABLE_NAME, null, null, null, null, null, CommonDB.MEMO_ID+" desc");
         memoAdapter = new MemoAdapter(this, cursor);
         listMemo.setAdapter(memoAdapter);
     }

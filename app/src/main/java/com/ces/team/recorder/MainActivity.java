@@ -19,8 +19,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    private String[] bill_data = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-    Button btnCheckCount, btnJumpMemo;
+
+    Button btnCheckCount, btnJumpMemo,btnNewBill;
     ListView billList;
     private DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -45,11 +45,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        btnNewBill= (Button) findViewById(R.id.btn_new_bill);
+        btnNewBill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this,"New",Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //list的绑定和数据传输
         billList = (ListView) findViewById(R.id.list_bill);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, bill_data);
-        billList.setAdapter(adapter);
+
 
         //Toolbar的设置
         Toolbar toolbarMain = (Toolbar) findViewById(R.id.toolbar_main);
@@ -62,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         //向右滑动屏幕也可以打开隐藏菜单
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.mipmap.ic_launcher);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_18dp);
         }
 
         //隐藏菜单的内容设置
@@ -92,25 +98,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_main, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                //点击最左侧小图标会弹出隐藏菜单
                 drawerLayout.openDrawer(GravityCompat.START);
-                break;
-            case R.id.new_bill:
-                //在这里进行新建记录的操作
-                Toast.makeText(MainActivity.this, "You clicked new operation", Toast.LENGTH_SHORT).show();
                 break;
             default:
         }
         return true;
     }
+
 }

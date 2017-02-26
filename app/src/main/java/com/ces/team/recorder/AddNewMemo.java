@@ -8,20 +8,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.zip.Inflater;
 
 public class AddNewMemo extends AppCompatActivity implements View.OnClickListener {
     String flagGet;
     EditText etAddNewMemo;
     Button btnCancelAddNewMemo, btnConfirmAddNewMemo;
     Toolbar toolbar;
-    MemoDB memoDB;
+    CommonDB memoDB;
     SQLiteDatabase dbWriter;
 
     @Override
@@ -37,7 +34,7 @@ public class AddNewMemo extends AppCompatActivity implements View.OnClickListene
         toolbar = (Toolbar) findViewById(R.id.toolbar_add_new_memo);
         setSupportActionBar(toolbar);
         toolbar.setTitle("");
-        memoDB = new MemoDB(this);
+        memoDB = new CommonDB(this);
         dbWriter = memoDB.getWritableDatabase();
     }
 
@@ -60,9 +57,9 @@ public class AddNewMemo extends AppCompatActivity implements View.OnClickListene
 
     public void addDB() {
         ContentValues cv = new ContentValues();
-        cv.put(MemoDB.CONTENT, etAddNewMemo.getText().toString());
-        cv.put(MemoDB.TIME, getTime());
-        dbWriter.insert(MemoDB.TABLE_NAME, null, cv);
+        cv.put(CommonDB.MEMO_CONTENT, etAddNewMemo.getText().toString());
+        cv.put(CommonDB.MEMO_TIME, getTime());
+        dbWriter.insert(CommonDB.MEMO_TABLE_NAME, null, cv);
     }
 
     public String getTime() {
