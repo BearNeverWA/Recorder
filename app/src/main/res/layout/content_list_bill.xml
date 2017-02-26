@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="80dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_bill_type_in"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/shape_round_textview_green"
+        android:gravity="center"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_bill_type_out"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/sharp_round_textview_red"
+        android:gravity="center"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_bill_value"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:textColor="#000"
+            android:textSize="40sp" />
+
+        <TextView
+            android:id="@+id/tv_bill_time"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginRight="10dp"
+            android:gravity="end|center" />
+
+    </LinearLayout>
+
+</LinearLayout>

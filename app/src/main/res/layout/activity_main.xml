@@ -30,6 +30,18 @@
                 android:textColor="#fff"
                 android:textSize="20sp" />
 
+            <Button
+                android:id="@+id/btn_new_bill"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:background="@null"
+                android:gravity="end|center"
+                android:padding="15dp"
+                android:text="新建"
+                android:textColor="#fff"
+                android:textSize="18sp" />
+
         </android.support.v7.widget.Toolbar>
 
         <LinearLayout
