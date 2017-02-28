@@ -49,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
         btnNewBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this,"New",Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(MainActivity.this,AddNewBill.class);
+                startActivity(intent);
             }
         });
 

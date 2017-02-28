@@ -21,7 +21,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_margin="10dp"
-        android:background="@drawable/sharp_round_textview_red"
+        android:background="@drawable/shape_round_textview_red"
         android:gravity="center"
         android:textColor="#fff"
         android:textSize="18sp"
