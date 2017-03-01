@@ -1,10 +1,7 @@
 package com.ces.team.recorder;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,7 +16,7 @@ import java.util.ArrayList;
 
 public class AddNewBill extends AppCompatActivity implements View.OnClickListener {
     Toolbar toolbarAddNewBill;
-    Button btnCancel, btnSave;
+    Button btnCancel;
     RadioGroup radioGroupAddNewBill;
     RadioButton rbIn, rbOut;
     ViewPager viewPager;
@@ -40,8 +37,6 @@ public class AddNewBill extends AppCompatActivity implements View.OnClickListene
 
         btnCancel = (Button) findViewById(R.id.btn_cancel_add_new_bill);
         btnCancel.setOnClickListener(this);
-//        btnSave = (Button) findViewById(R.id.btn_confirm_add_new_bill);
-//        btnSave.setOnClickListener(this);
 
         radioGroupAddNewBill = (RadioGroup) findViewById(R.id.radio_group);
         rbIn = (RadioButton) findViewById(R.id.rb_in);
@@ -110,16 +105,6 @@ public class AddNewBill extends AppCompatActivity implements View.OnClickListene
             case R.id.btn_cancel_add_new_bill:
                 finish();
                 break;
-//            case R.id.btn_confirm_add_new_bill:
-//                switch (viewPager.getCurrentItem()){
-//                    case 0:
-//
-//                        break;
-//                    case 1:
-//
-//                        break;
-//                }
-//                break;
             default:
         }
     }

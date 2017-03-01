@@ -59,7 +59,7 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/sharp"
-                android:text="check_test"
+                android:text="查看账单分析"
                 android:textAllCaps="false"
                 android:textColor="#fff" />
 
@@ -71,7 +71,7 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/sharp"
-                android:text="memo_test"
+                android:text="进入轻松忆"
                 android:textAllCaps="false"
                 android:textColor="#fff" />
 

@@ -1,6 +1,8 @@
 package com.ces.team.recorder;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,14 +16,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by Call Me Bear on 2017/2/27.
  */
 
 public class FragmentIn extends Fragment {
-    Button btnInSalary, btnInPartTime, btnInOthers,btnSaveIn;
+    Button btnInSalary, btnInPartTime, btnInOthers, btnSaveIn;
     EditText etInValue;
     View view;
+    String type = "1";
+    SQLiteDatabase dbWriter;
+    CommonDB billDB;
 
     @Nullable
     @Override
@@ -41,6 +49,7 @@ public class FragmentIn extends Fragment {
         btnInSalary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                type = "1";
                 btnInSalary.setBackgroundResource(R.drawable.shape_round_textview_green);
                 btnInSalary.setTextColor(Color.WHITE);
                 btnInPartTime.setBackgroundResource(R.drawable.shape_round_textview_gwhite);
@@ -53,6 +62,7 @@ public class FragmentIn extends Fragment {
         btnInPartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                type = "2";
                 btnInPartTime.setBackgroundResource(R.drawable.shape_round_textview_green);
                 btnInPartTime.setTextColor(Color.WHITE);
                 btnInSalary.setBackgroundResource(R.drawable.shape_round_textview_gwhite);
@@ -65,6 +75,7 @@ public class FragmentIn extends Fragment {
         btnInOthers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                type = "3";
                 btnInOthers.setBackgroundResource(R.drawable.shape_round_textview_green);
                 btnInOthers.setTextColor(Color.WHITE);
                 btnInPartTime.setBackgroundResource(R.drawable.shape_round_textview_gwhite);
@@ -77,22 +88,73 @@ public class FragmentIn extends Fragment {
         etInValue = (EditText) getActivity().findViewById(R.id.et_value_in);
         etInValue.requestFocus();
 
-        btnSaveIn= (Button) getActivity().findViewById(R.id.btn_confirm_add_in);
+        btnSaveIn = (Button) getActivity().findViewById(R.id.btn_confirm_add_in);
         btnSaveIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String str=etInValue.getText().toString();
-                if (!str.equals("")){
-                    Toast.makeText(getActivity(),"Your data is "+str,Toast.LENGTH_SHORT).show();
+                String str = etInValue.getText().toString();
+                if (!str.equals("")) {
+                    if (isInvalid(str)) {
+                        String handleResult=HandleData(str);
+                        addDB(handleResult);
+                        getActivity().finish();
+
+                    } else {
+                        Toast.makeText(getActivity(), "数据不合法", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
+        billDB=new CommonDB(getActivity());
+        dbWriter=billDB.getWritableDatabase();
     }
 
-
-    public int whichChecked() {
-        return 0;
+    private void addDB(String s){
+        ContentValues cv=new ContentValues();
+        switch (type){
+            case "1":
+                cv.put(CommonDB.BILL_TYPE,"工资");
+                break;
+            case "2":
+                cv.put(CommonDB.BILL_TYPE,"兼职");
+                break;
+            case "3":
+                cv.put(CommonDB.BILL_TYPE,"其他");
+                break;
+        }
+        cv.put(CommonDB.BILL_BOOL,"1");
+        cv.put(CommonDB.BILL_VALUE,s);
+        cv.put(CommonDB.BILL_TIME,getTime());
+        dbWriter.insert(CommonDB.BILL_TABLE_NAME,null,cv);
     }
 
+    private String getTime(){
+        SimpleDateFormat format=new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+        Date date=new Date();
+        return format.format(date);
+    }
 
+    private String HandleData(String s) {
+        int position = s.indexOf(".");
+        if (position == 0)
+            return "0" + s;
+        if (position == s.length() - 1)
+            return s.substring(0, s.length() - 1);
+        return s;
+    }
+
+    private boolean isInvalid(String s) {
+        if (s.equals("0"))
+            return false;
+        int num = 0;
+        char c = '.';
+        char[] str = s.toCharArray();
+        for (int i = 0; i < str.length; i++) {
+            if (str[i] == c)
+                num++;
+        }
+        if (num > 1)
+            return false;
+        return true;
+    }
 }

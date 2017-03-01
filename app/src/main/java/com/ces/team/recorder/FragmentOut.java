@@ -160,7 +160,7 @@ public class FragmentOut extends Fragment {
         });
     }
 
-    public int whichChecked() {
-        return 0;
-    }
+//    public int whichChecked() {
+//        return 0;
+//    }
 }

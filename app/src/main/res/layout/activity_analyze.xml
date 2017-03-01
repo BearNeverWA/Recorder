@@ -14,8 +14,18 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:navigationIcon="@mipmap/ic_launcher"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <Button
+            android:id="@+id/btn_back_bill_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:background="@null"
+            android:gravity="start|center"
+            android:text="返回"
+            android:textColor="#fff"
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="wrap_content"

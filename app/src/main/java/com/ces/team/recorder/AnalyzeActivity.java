@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSelectedListener {
     EditText etDate;
-    Button btnQuery, btnQueryMonth;
+    Button btnQuery, btnQueryMonth, btnBack;
     PieChart pieChart;
     int dataInput;
     Toolbar toolbarAnalyze;
@@ -37,6 +37,13 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
         setContentView(R.layout.activity_analyze);
         etDate = (EditText) findViewById(R.id.et_day_of_month);
         btnQuery = (Button) findViewById(R.id.btn_query_confirm);
+        btnBack = (Button) findViewById(R.id.btn_back_bill_list);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         btnQueryMonth = (Button) findViewById(R.id.btn_query_of_month);
         btnQuery.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,9 +58,8 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
                             // 最好使用新线程操作
                         else if (dataInput <= 31 && dataInput >= 1)
                             Toast.makeText(AnalyzeActivity.this, dataInput + "", Toast.LENGTH_SHORT).show();
-                    }
-                    else if (strInput.length()==0){
-                        Toast.makeText(AnalyzeActivity.this,"Input cannot be blank",Toast.LENGTH_SHORT).show();
+                    } else if (strInput.length() == 0) {
+                        Toast.makeText(AnalyzeActivity.this, "Input cannot be blank", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -63,19 +69,14 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
             public void onClick(View v) {
                 //获取月份然后查询数据库
                 //一样最好使用新线程操作
-                Toast.makeText(AnalyzeActivity.this,"Query this month",Toast.LENGTH_SHORT).show();
+                Toast.makeText(AnalyzeActivity.this, "Query this month", Toast.LENGTH_SHORT).show();
             }
         });
         pieChart = (PieChart) findViewById(R.id.pie_chart);
         toolbarAnalyze = (Toolbar) findViewById(R.id.toolbar_analyze);
         setSupportActionBar(toolbarAnalyze);
         toolbarAnalyze.setTitle("");
-        toolbarAnalyze.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AnalyzeActivity.this.finish();
-            }
-        });
+
         init();
     }
 

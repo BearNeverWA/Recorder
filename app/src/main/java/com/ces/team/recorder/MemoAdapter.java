@@ -47,7 +47,7 @@ public class MemoAdapter extends BaseAdapter {
         TextView tvTime = (TextView) layout.findViewById(R.id.time_list_memo);
         cursor.moveToPosition(position);
         String content = cursor.getString(cursor.getColumnIndex("content"));
-        String time = cursor.getString(cursor.getColumnIndex("time"));
+        String time = cursor.getString(cursor.getColumnIndex("time_memo"));
         tvContent.setText(content);
         String timeFinal = "上次修改:" + time;
         tvTime.setText(timeFinal);

@@ -1,6 +1,8 @@
 package com.ces.team.recorder;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
@@ -20,15 +22,21 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btnCheckCount, btnJumpMemo,btnNewBill;
+    Button btnCheckCount, btnJumpMemo, btnNewBill;
     ListView billList;
     private DrawerLayout drawerLayout;
     NavigationView navigationView;
+    SQLiteDatabase dbReader;
+    CommonDB billDB;
+    Cursor cursor;
+    BillAdapter billAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        billDB = new CommonDB(this);
+        dbReader = billDB.getReadableDatabase();
         btnCheckCount = (Button) findViewById(R.id.btn_check_count);
         btnCheckCount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,11 +53,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        btnNewBill= (Button) findViewById(R.id.btn_new_bill);
+        btnNewBill = (Button) findViewById(R.id.btn_new_bill);
         btnNewBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this,AddNewBill.class);
+                Intent intent = new Intent(MainActivity.this, AddNewBill.class);
                 startActivity(intent);
             }
         });
@@ -99,6 +107,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void selectDB() {
+        cursor=dbReader.query(CommonDB.BILL_TABLE_NAME, null, null, null, null, null, CommonDB.BILL_ID + " desc");
+        billAdapter = new BillAdapter(this, cursor);
+        billList.setAdapter(billAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        selectDB();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
