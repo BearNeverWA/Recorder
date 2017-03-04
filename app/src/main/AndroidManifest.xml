@@ -30,7 +30,15 @@
             android:name=".AddNewMemo"
             android:label=""
             android:screenOrientation="portrait" />
-        <activity android:name=".MemoDetail"></activity>
+        <activity
+            android:name=".MemoDetail"
+            android:label="" />
+        <activity
+            android:name=".AddNewBill"
+            android:label="" />
+        <activity
+            android:name=".AnalyzeActivityIn"
+            android:label="" />
     </application>
 
 </manifest>

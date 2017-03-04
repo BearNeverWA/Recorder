@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -64,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
         //list的绑定和数据传输
         billList = (ListView) findViewById(R.id.list_bill);
-
 
         //Toolbar的设置
         Toolbar toolbarMain = (Toolbar) findViewById(R.id.toolbar_main);

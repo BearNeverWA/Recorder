@@ -1,6 +1,10 @@
 package com.ces.team.recorder;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.icu.util.Calendar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -22,14 +26,19 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSelectedListener {
     EditText etDate;
-    Button btnQuery, btnQueryMonth, btnBack;
+    Button btnQuery, btnQueryMonth, btnBack, btnQueryIn;
     PieChart pieChart;
-    int dataInput;
     Toolbar toolbarAnalyze;
+    CommonDB billDB;
+    SQLiteDatabase dbReader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +46,15 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
         setContentView(R.layout.activity_analyze);
         etDate = (EditText) findViewById(R.id.et_day_of_month);
         btnQuery = (Button) findViewById(R.id.btn_query_confirm);
+        btnQueryIn = (Button) findViewById(R.id.btn_query_in);
+        btnQueryIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AnalyzeActivity.this, AnalyzeActivityIn.class);
+                finish();
+                startActivity(intent);
+            }
+        });
         btnBack = (Button) findViewById(R.id.btn_back_bill_list);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,15 +69,14 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
                 if (etDate != null) {
                     String strInput = etDate.getText().toString();
                     if (strInput.length() > 0) {
-                        dataInput = Integer.parseInt(strInput);
-                        if (dataInput > 31 || dataInput < 1)
-                            Toast.makeText(AnalyzeActivity.this, "Invalid Input", Toast.LENGTH_SHORT).show();
-                            // 在这里执行查询数据库的操作
-                            // 最好使用新线程操作
-                        else if (dataInput <= 31 && dataInput >= 1)
-                            Toast.makeText(AnalyzeActivity.this, dataInput + "", Toast.LENGTH_SHORT).show();
+                        int dataInput = Integer.parseInt(strInput);
+                        if (dataInput >= 1 && dataInput <= getMaxDayOfMonth()) {
+                            Toast.makeText(AnalyzeActivity.this, "查询成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(AnalyzeActivity.this, "数据不合法", Toast.LENGTH_SHORT).show();
+                        }
                     } else if (strInput.length() == 0) {
-                        Toast.makeText(AnalyzeActivity.this, "Input cannot be blank", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AnalyzeActivity.this, "输入不能为空", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -73,10 +90,15 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
             }
         });
         pieChart = (PieChart) findViewById(R.id.pie_chart);
-        toolbarAnalyze = (Toolbar) findViewById(R.id.toolbar_analyze);
+        toolbarAnalyze = (Toolbar) findViewById(R.id.toolbar_analyze_out);
         setSupportActionBar(toolbarAnalyze);
         toolbarAnalyze.setTitle("");
 
+        billDB = new CommonDB(this);
+        dbReader = billDB.getReadableDatabase();
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        setEntriesToday(entries);
+        setData(entries);
         init();
     }
 
@@ -109,16 +131,6 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
 
         //监听变化
         pieChart.setOnChartValueSelectedListener(this);
-
-        //数据模拟，在这里传入数据
-        ArrayList<PieEntry> entries = new ArrayList<>();
-        //new PieEntry里传入两个参数,一个是百分比(int),一个是内容(String)
-        entries.add(new PieEntry(40, "优秀"));
-        entries.add(new PieEntry(30, "良好"));
-        entries.add(new PieEntry(20, "及格"));
-        entries.add(new PieEntry(10, "不及格"));
-
-        setData(entries);
 
         pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
         Legend legend = pieChart.getLegend();
@@ -178,5 +190,93 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
         pieChart.highlightValues(null);
         //刷新
         pieChart.invalidate();
+    }
+
+    private void setEntriesToday(ArrayList<PieEntry> entries) {
+        float sumCloth = 0;
+        float sum = 0;
+        float mResult;
+        DecimalFormat format = new DecimalFormat("0.00");
+        Cursor cursor;
+        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, "bool=?", new String[]{"2"}, null, null, null);
+        while (cursor.moveToNext()) {
+            sum += Double.valueOf(cursor.getString(cursor.getColumnIndex(CommonDB.BILL_VALUE)));
+        }
+        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, "bool=? and type=?", new String[]{"2", "服饰"}, null, null, null);
+        while (cursor.moveToNext()) {
+            sumCloth += Double.valueOf(cursor.getString(3));
+        }
+        mResult = Float.valueOf(format.format(sumCloth / sum));
+        entries.add(new PieEntry(mResult, "服饰"));
+        cursor.close();
+    }
+
+    private String getMonth() {
+        SimpleDateFormat format = new SimpleDateFormat("MM");
+        Date date = new Date();
+        String monthResult;
+        if (format.format(date).charAt(0) == '0') {
+            monthResult = format.format(date).substring(1, 2);
+        } else {
+            monthResult = format.format(date);
+        }
+        return monthResult;
+    }
+
+    private int getMaxDayOfMonth() {
+        int maxDay = 0;
+        switch (Integer.valueOf(getMonth())) {
+            case 1:
+                maxDay = 31;
+                break;
+            case 2:
+                if (isBigYear())
+                    maxDay = 28;
+                else {
+                    maxDay = 27;
+                }
+                break;
+            case 3:
+                maxDay = 31;
+                break;
+            case 4:
+                maxDay = 30;
+                break;
+            case 5:
+                maxDay = 31;
+                break;
+            case 6:
+                maxDay = 30;
+                break;
+            case 7:
+                maxDay = 31;
+                break;
+            case 8:
+                maxDay = 31;
+                break;
+            case 9:
+                maxDay = 30;
+                break;
+            case 10:
+                maxDay = 31;
+                break;
+            case 11:
+                maxDay = 30;
+                break;
+            case 12:
+                maxDay = 31;
+                break;
+        }
+        return maxDay;
+    }
+
+    private boolean isBigYear() {
+        SimpleDateFormat format = new SimpleDateFormat("YYYY");
+        Date date = new Date();
+        int year = Integer.valueOf(format.format(date));
+        if ((year % 4 == 0 && year % 1000 != 0) || (year % 400 == 0)) {
+            return true;
+        } else
+            return false;
     }
 }

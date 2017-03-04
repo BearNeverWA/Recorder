@@ -1,5 +1,7 @@
 package com.ces.team.recorder;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by Call Me Bear on 2017/2/27.
  */
@@ -19,6 +24,9 @@ public class FragmentOut extends Fragment {
     Button btnOutCloth, btnOutFood, btnOutHousing, btnOutTraffic, btnOutMedical, btnOutOthers,btnSaveOut;
     EditText etOutValue;
     View view;
+    String type="服饰";
+    SQLiteDatabase dbWriter;
+    CommonDB billDB;
 
     @Nullable
     @Override
@@ -41,7 +49,15 @@ public class FragmentOut extends Fragment {
             @Override
             public void onClick(View v) {
                 String str=etOutValue.getText().toString();
-                Toast.makeText(getActivity(),"Your data is "+ str,Toast.LENGTH_SHORT).show();
+                if (!str.equals("")){
+                    if (isInvalid(str)){
+                        String handleResult=HandleData(str);
+                        addDB(handleResult);
+                        getActivity().finish();
+                    }else {
+                        Toast.makeText(getActivity(),"数据不合法",Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 
@@ -49,6 +65,7 @@ public class FragmentOut extends Fragment {
         btnOutCloth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                type="服饰";
                 btnOutCloth.setBackgroundResource(R.drawable.shape_round_textview_red);
                 btnOutCloth.setTextColor(Color.WHITE);
                 btnOutFood.setBackgroundResource(R.drawable.shape_round_textview_rwhite);
@@ -68,6 +85,7 @@ public class FragmentOut extends Fragment {
         btnOutFood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                type="饮食";
                 btnOutFood.setBackgroundResource(R.drawable.shape_round_textview_red);
                 btnOutFood.setTextColor(Color.WHITE);
                 btnOutCloth.setBackgroundResource(R.drawable.shape_round_textview_rwhite);
@@ -87,6 +105,7 @@ public class FragmentOut extends Fragment {
         btnOutHousing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                type="住房";
                 btnOutHousing.setBackgroundResource(R.drawable.shape_round_textview_red);
                 btnOutHousing.setTextColor(Color.WHITE);
                 btnOutFood.setBackgroundResource(R.drawable.shape_round_textview_rwhite);
@@ -106,6 +125,7 @@ public class FragmentOut extends Fragment {
         btnOutTraffic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                type="交通";
                 btnOutTraffic.setBackgroundResource(R.drawable.shape_round_textview_red);
                 btnOutTraffic.setTextColor(Color.WHITE);
                 btnOutFood.setBackgroundResource(R.drawable.shape_round_textview_rwhite);
@@ -125,6 +145,7 @@ public class FragmentOut extends Fragment {
         btnOutMedical.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                type="医疗";
                 btnOutMedical.setBackgroundResource(R.drawable.shape_round_textview_red);
                 btnOutMedical.setTextColor(Color.WHITE);
                 btnOutFood.setBackgroundResource(R.drawable.shape_round_textview_rwhite);
@@ -144,6 +165,7 @@ public class FragmentOut extends Fragment {
         btnOutOthers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                type="其他";
                 btnOutOthers.setBackgroundResource(R.drawable.shape_round_textview_red);
                 btnOutOthers.setTextColor(Color.WHITE);
                 btnOutFood.setBackgroundResource(R.drawable.shape_round_textview_rwhite);
@@ -158,9 +180,46 @@ public class FragmentOut extends Fragment {
                 btnOutCloth.setTextColor(Color.rgb(255, 64, 64));
             }
         });
+        billDB=new CommonDB(getActivity());
+        dbWriter=billDB.getWritableDatabase();
     }
 
-//    public int whichChecked() {
-//        return 0;
-//    }
+    private void addDB(String s){
+        ContentValues cv=new ContentValues();
+        cv.put(CommonDB.BILL_TYPE,type);
+        cv.put(CommonDB.BILL_BOOL,"2");
+        cv.put(CommonDB.BILL_VALUE,s);
+        cv.put(CommonDB.BILL_TIME,getTime());
+        dbWriter.insert(CommonDB.BILL_TABLE_NAME,null,cv);
+    }
+
+    private String getTime(){
+        SimpleDateFormat format=new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+        Date date=new Date();
+        return format.format(date);
+    }
+
+    private String HandleData(String s) {
+        int position = s.indexOf(".");
+        if (position == 0)
+            return "0" + s;
+        if (position == s.length() - 1)
+            return s.substring(0, s.length() - 1);
+        return s;
+    }
+
+    private boolean isInvalid(String s) {
+        if (s.equals("0"))
+            return false;
+        int num = 0;
+        char c = '.';
+        char[] str = s.toCharArray();
+        for (int i = 0; i < str.length; i++) {
+            if (str[i] == c)
+                num++;
+        }
+        if (num > 1)
+            return false;
+        return true;
+    }
 }

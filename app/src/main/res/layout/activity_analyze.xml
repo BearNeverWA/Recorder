@@ -9,7 +9,7 @@
     tools:context="com.ces.team.recorder.AnalyzeActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_analyze"
+        android:id="@+id/toolbar_analyze_out"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
@@ -31,9 +31,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="账单分析"
+            android:text="支出分析"
             android:textColor="#fff"
             android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_query_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:gravity="end|center"
+            android:text="收入分析"
+            android:textSize="18sp" />
 
     </android.support.v7.widget.Toolbar>
 
@@ -50,17 +61,17 @@
             android:orientation="vertical">
 
             <EditText
+
                 android:id="@+id/et_day_of_month"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp"
+                android:layout_margin="10dp"
                 android:background="@drawable/sharp_grey"
-                android:hint="请输入日期"
+                android:hint="日期？"
                 android:inputType="number"
                 android:maxLength="2"
                 android:padding="5dp"
-                android:textColor="#000"
-                android:textSize="14sp" />
+                android:textColor="#000" />
 
         </LinearLayout>
 
@@ -75,11 +86,11 @@
                 android:id="@+id/btn_query_confirm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="10dp"
                 android:background="@drawable/sharp"
+                android:gravity="center"
                 android:text="查询"
-                android:textColor="#fff"
-                android:textSize="20sp" />
+                android:textColor="#fff" />
 
         </LinearLayout>
 
@@ -94,11 +105,11 @@
                 android:id="@+id/btn_query_of_month"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp"
+                android:layout_margin="10dp"
                 android:background="@drawable/sharp"
+                android:gravity="center"
                 android:text="查看当月账单"
-                android:textColor="#fff"
-                android:textSize="20sp" />
+                android:textColor="#fff" />
 
         </LinearLayout>
 

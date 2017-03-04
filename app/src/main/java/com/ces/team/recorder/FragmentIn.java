@@ -27,7 +27,7 @@ public class FragmentIn extends Fragment {
     Button btnInSalary, btnInPartTime, btnInOthers, btnSaveIn;
     EditText etInValue;
     View view;
-    String type = "1";
+    String type = "工资";
     SQLiteDatabase dbWriter;
     CommonDB billDB;
 
@@ -49,7 +49,7 @@ public class FragmentIn extends Fragment {
         btnInSalary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                type = "1";
+                type = "工资";
                 btnInSalary.setBackgroundResource(R.drawable.shape_round_textview_green);
                 btnInSalary.setTextColor(Color.WHITE);
                 btnInPartTime.setBackgroundResource(R.drawable.shape_round_textview_gwhite);
@@ -62,7 +62,7 @@ public class FragmentIn extends Fragment {
         btnInPartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                type = "2";
+                type = "兼职";
                 btnInPartTime.setBackgroundResource(R.drawable.shape_round_textview_green);
                 btnInPartTime.setTextColor(Color.WHITE);
                 btnInSalary.setBackgroundResource(R.drawable.shape_round_textview_gwhite);
@@ -75,7 +75,7 @@ public class FragmentIn extends Fragment {
         btnInOthers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                type = "3";
+                type = "其他";
                 btnInOthers.setBackgroundResource(R.drawable.shape_round_textview_green);
                 btnInOthers.setTextColor(Color.WHITE);
                 btnInPartTime.setBackgroundResource(R.drawable.shape_round_textview_gwhite);
@@ -111,17 +111,7 @@ public class FragmentIn extends Fragment {
 
     private void addDB(String s){
         ContentValues cv=new ContentValues();
-        switch (type){
-            case "1":
-                cv.put(CommonDB.BILL_TYPE,"工资");
-                break;
-            case "2":
-                cv.put(CommonDB.BILL_TYPE,"兼职");
-                break;
-            case "3":
-                cv.put(CommonDB.BILL_TYPE,"其他");
-                break;
-        }
+        cv.put(CommonDB.BILL_TYPE,type);
         cv.put(CommonDB.BILL_BOOL,"1");
         cv.put(CommonDB.BILL_VALUE,s);
         cv.put(CommonDB.BILL_TIME,getTime());
