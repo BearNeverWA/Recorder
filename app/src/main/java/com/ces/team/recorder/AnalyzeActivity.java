@@ -39,6 +39,7 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
     Toolbar toolbarAnalyze;
     CommonDB billDB;
     SQLiteDatabase dbReader;
+    String str;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +72,14 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
                     if (strInput.length() > 0) {
                         int dataInput = Integer.parseInt(strInput);
                         if (dataInput >= 1 && dataInput <= getMaxDayOfMonth()) {
-                            Toast.makeText(AnalyzeActivity.this, "查询成功", Toast.LENGTH_SHORT).show();
+                            ArrayList<PieEntry> entries=new ArrayList<>();
+                            if (strInput.length()>1)
+                                str=getMonthFormat()+"-"+strInput;
+                            else
+                                str=getMonthFormat()+"-0"+strInput;
+                            setEntries(entries,"day",str);
+                            setData(entries);
+                            init();
                         } else {
                             Toast.makeText(AnalyzeActivity.this, "数据不合法", Toast.LENGTH_SHORT).show();
                         }
@@ -84,9 +92,13 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
         btnQueryMonth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //获取月份然后查询数据库
-                //一样最好使用新线程操作
-                Toast.makeText(AnalyzeActivity.this, "Query this month", Toast.LENGTH_SHORT).show();
+                etDate.setVisibility(View.INVISIBLE);
+                btnQuery.setVisibility(View.INVISIBLE);
+                btnQueryMonth.setVisibility(View.INVISIBLE);
+                ArrayList<PieEntry> entries = new ArrayList<>();
+                setEntries(entries,"month",getMonthFormat());
+                setData(entries);
+                init();
             }
         });
         pieChart = (PieChart) findViewById(R.id.pie_chart);
@@ -97,7 +109,8 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
         billDB = new CommonDB(this);
         dbReader = billDB.getReadableDatabase();
         ArrayList<PieEntry> entries = new ArrayList<>();
-        setEntriesToday(entries);
+
+        setEntries(entries,"day",getDayFormat());
         setData(entries);
         init();
     }
@@ -157,7 +170,7 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
 
     //设置中间显示的文字
     private SpannableString generateCenterSpannableText() {
-        SpannableString spannableString = new SpannableString("Java_艾敏组\n倾情呈现");
+        SpannableString spannableString = new SpannableString("轻松分析");
         //spannableString.setSpan(new StyleSpan(Typeface.NORMAL), spannableString.length(), spannableString.length() - 15, 0);
         return spannableString;
     }
@@ -192,23 +205,178 @@ public class AnalyzeActivity extends AppCompatActivity implements OnChartValueSe
         pieChart.invalidate();
     }
 
-    private void setEntriesToday(ArrayList<PieEntry> entries) {
-        float sumCloth = 0;
+    private void setEntries(ArrayList<PieEntry> entries,String date,String selection) {
+        float sumCloth = 0, sumFood = 0, sumHousing = 0, sumTraffic = 0, sumMedical = 0, sumOthers = 0;
         float sum = 0;
-        float mResult;
         DecimalFormat format = new DecimalFormat("0.00");
-        Cursor cursor;
-        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, "bool=?", new String[]{"2"}, null, null, null);
-        while (cursor.moveToNext()) {
-            sum += Double.valueOf(cursor.getString(cursor.getColumnIndex(CommonDB.BILL_VALUE)));
+        //查询支出总和
+        Cursor cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, date+"=? and bool=?", new String[]{selection, "2"}, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+                sum += result;
+            }
         }
-        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, "bool=? and type=?", new String[]{"2", "服饰"}, null, null, null);
-        while (cursor.moveToNext()) {
-            sumCloth += Double.valueOf(cursor.getString(3));
+
+        //查询衣服支出总和
+        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, date+"=? and type=?", new String[]{selection, "服饰"}, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+                sumCloth += result;
+            }
         }
-        mResult = Float.valueOf(format.format(sumCloth / sum));
-        entries.add(new PieEntry(mResult, "服饰"));
-        cursor.close();
+
+        //查询饮食支出总和
+        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, date+"=? and type=?", new String[]{selection, "饮食"}, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+                sumFood += result;
+            }
+        }
+
+        //查询住房支出总和
+        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, date+"=? and type=?", new String[]{selection, "住房"}, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+                sumHousing += result;
+            }
+        }
+
+        //查询交通支出总和
+        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, date+"=? and type=?", new String[]{selection, "交通"}, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+                sumTraffic += result;
+            }
+        }
+
+        //查询医疗支出总和
+        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, date+"=? and type=?", new String[]{selection, "医疗"}, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+                sumMedical += result;
+            }
+        }
+
+        //查询其他支出总和
+        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, date+"=? and type=? and bool=?", new String[]{selection, "其他", "2"}, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+                sumOthers += result;
+            }
+        }
+
+        Float result = Float.parseFloat(format.format((sumCloth / sum) * 100));
+        entries.add(new PieEntry(result, "服饰"));
+        result = Float.parseFloat(format.format((sumFood / sum) * 100));
+        entries.add(new PieEntry(result, "饮食"));
+        result = Float.parseFloat(format.format((sumHousing / sum) * 100));
+        entries.add(new PieEntry(result, "住房"));
+        result = Float.parseFloat(format.format((sumTraffic / sum) * 100));
+        entries.add(new PieEntry(result, "交通"));
+        result = Float.parseFloat(format.format((sumMedical / sum) * 100));
+        entries.add(new PieEntry(result, "医疗"));
+        result = Float.parseFloat(format.format((sumOthers / sum) * 100));
+        entries.add(new PieEntry(result, "其他"));
+    }
+
+//    private void setEntriesMonth(ArrayList<PieEntry> entries) {
+//        float sumCloth = 0, sumFood = 0, sumHousing = 0, sumTraffic = 0, sumMedical = 0, sumOthers = 0;
+//        float sum = 0;
+//        DecimalFormat format = new DecimalFormat("0.00");
+//        //查询支出总和
+//        Cursor cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, "month=? and bool=?", new String[]{getMonthFormat(), "2"}, null, null, null);
+//        if (cursor != null) {
+//            while (cursor.moveToNext()) {
+//                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+//                sum += result;
+//            }
+//        }
+//
+//        //查询衣服支出总和
+//        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, "month=? and type=?", new String[]{getMonthFormat(), "服饰"}, null, null, null);
+//        if (cursor != null) {
+//            while (cursor.moveToNext()) {
+//                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+//                sumCloth += result;
+//            }
+//        }
+//
+//        //查询饮食支出总和
+//        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, "month=? and type=?", new String[]{getMonthFormat(), "饮食"}, null, null, null);
+//        if (cursor != null) {
+//            while (cursor.moveToNext()) {
+//                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+//                sumFood += result;
+//            }
+//        }
+//
+//        //查询住房支出总和
+//        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, "month=? and type=?", new String[]{getMonthFormat(), "住房"}, null, null, null);
+//        if (cursor != null) {
+//            while (cursor.moveToNext()) {
+//                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+//                sumHousing += result;
+//            }
+//        }
+//
+//        //查询交通支出总和
+//        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, "month=? and type=?", new String[]{getMonthFormat(), "交通"}, null, null, null);
+//        if (cursor != null) {
+//            while (cursor.moveToNext()) {
+//                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+//                sumTraffic += result;
+//            }
+//        }
+//
+//        //查询医疗支出总和
+//        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, "month=? and type=?", new String[]{getMonthFormat(), "医疗"}, null, null, null);
+//        if (cursor != null) {
+//            while (cursor.moveToNext()) {
+//                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+//                sumMedical += result;
+//            }
+//        }
+//
+//        //查询其他支出总和
+//        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, "month=? and type=? and bool=?", new String[]{getMonthFormat(), "其他", "2"}, null, null, null);
+//        if (cursor != null) {
+//            while (cursor.moveToNext()) {
+//                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+//                sumOthers += result;
+//            }
+//        }
+//
+//        Float result = Float.parseFloat(format.format((sumCloth / sum) * 100));
+//        entries.add(new PieEntry(result, "服饰"));
+//        result = Float.parseFloat(format.format((sumFood / sum) * 100));
+//        entries.add(new PieEntry(result, "饮食"));
+//        result = Float.parseFloat(format.format((sumHousing / sum) * 100));
+//        entries.add(new PieEntry(result, "住房"));
+//        result = Float.parseFloat(format.format((sumTraffic / sum) * 100));
+//        entries.add(new PieEntry(result, "交通"));
+//        result = Float.parseFloat(format.format((sumMedical / sum) * 100));
+//        entries.add(new PieEntry(result, "医疗"));
+//        result = Float.parseFloat(format.format((sumOthers / sum) * 100));
+//        entries.add(new PieEntry(result, "其他"));
+//    }
+
+    private String getDayFormat() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        return format.format(date);
+    }
+
+    private String getMonthFormat() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
+        Date date = new Date();
+        return format.format(date);
     }
 
     private String getMonth() {

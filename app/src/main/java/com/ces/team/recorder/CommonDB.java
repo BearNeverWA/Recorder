@@ -20,6 +20,8 @@ public class CommonDB extends SQLiteOpenHelper {
     public static final String BILL_BOOL = "bool";
     public static final String BILL_TYPE = "type";
     public static final String BILL_TIME = "time_bill";
+    public static final String BILL_TIME_DAY ="day";
+    public static final String BILL_TIME_MONTH="month";
 
     public CommonDB(Context context) {
         super(context, "memo", null, 1);
@@ -37,7 +39,9 @@ public class CommonDB extends SQLiteOpenHelper {
                 + BILL_BOOL + " text not null,"
                 + BILL_TYPE + " text not null,"
                 + BILL_VALUE + " text not null,"
-                + BILL_TIME + " text not null)");
+                + BILL_TIME + " text not null,"
+                + BILL_TIME_MONTH + " text not null,"
+                + BILL_TIME_DAY + " text not null)");
     }
 
     @Override

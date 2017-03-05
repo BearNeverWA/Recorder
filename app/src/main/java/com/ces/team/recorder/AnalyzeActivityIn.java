@@ -1,6 +1,8 @@
 package com.ces.team.recorder;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Interpolator;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +26,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,6 +37,9 @@ public class AnalyzeActivityIn extends AppCompatActivity implements OnChartValue
     Button btnQuery, btnQueryMonth, btnBack, btnQueryOut;
     PieChart pieChart;
     Toolbar toolbarAnalyze;
+    CommonDB billDB;
+    SQLiteDatabase dbReader;
+    String str;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +51,7 @@ public class AnalyzeActivityIn extends AppCompatActivity implements OnChartValue
         btnQueryOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
+                Intent intent = new Intent(AnalyzeActivityIn.this, AnalyzeActivity.class);
                 finish();
                 startActivity(intent);
             }
@@ -66,8 +72,15 @@ public class AnalyzeActivityIn extends AppCompatActivity implements OnChartValue
                     String strInput = etDate.getText().toString();
                     if (strInput.length() > 0) {
                         int dataInput = Integer.parseInt(strInput);
+                        ArrayList<PieEntry> entries = new ArrayList<>();
                         if (dataInput >= 1 && dataInput <= getMaxDayOfMonth()) {
-                            Toast.makeText(AnalyzeActivityIn.this, "查询成功", Toast.LENGTH_SHORT).show();
+                            if (strInput.length() > 1)
+                                str = getMonthFormat() + "-" + strInput;
+                            else
+                                str = getMonthFormat() + "-0" + strInput;
+                            setEntries(entries, "day", str);
+                            setData(entries);
+                            init();
                         } else {
                             Toast.makeText(AnalyzeActivityIn.this, "数据不合法", Toast.LENGTH_SHORT).show();
                         }
@@ -80,9 +93,10 @@ public class AnalyzeActivityIn extends AppCompatActivity implements OnChartValue
         btnQueryMonth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //获取月份然后查询数据库
-                //一样最好使用新线程操作
-                Toast.makeText(AnalyzeActivityIn.this, "Query this month", Toast.LENGTH_SHORT).show();
+                ArrayList<PieEntry> entries = new ArrayList<>();
+                setEntries(entries,"month",getMonthFormat());
+                setData(entries);
+                init();
             }
         });
         pieChart = (PieChart) findViewById(R.id.pie_chart);
@@ -90,6 +104,12 @@ public class AnalyzeActivityIn extends AppCompatActivity implements OnChartValue
         setSupportActionBar(toolbarAnalyze);
         toolbarAnalyze.setTitle("");
 
+        billDB = new CommonDB(this);
+        dbReader = billDB.getReadableDatabase();
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        setEntries(entries,"day",getDayFormat());
+        setData(entries);
         init();
     }
 
@@ -123,16 +143,6 @@ public class AnalyzeActivityIn extends AppCompatActivity implements OnChartValue
         //监听变化
         pieChart.setOnChartValueSelectedListener(this);
 
-        //数据模拟，在这里传入数据
-        ArrayList<PieEntry> entries = new ArrayList<>();
-        //new PieEntry里传入两个参数,一个是百分比(int),一个是内容(String)
-        entries.add(new PieEntry(40, "优秀"));
-        entries.add(new PieEntry(30, "良好"));
-        entries.add(new PieEntry(20, "及格"));
-        entries.add(new PieEntry(10, "不及格"));
-
-        setData(entries);
-
         pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
         Legend legend = pieChart.getLegend();
         legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
@@ -158,7 +168,7 @@ public class AnalyzeActivityIn extends AppCompatActivity implements OnChartValue
 
     //设置中间显示的文字
     private SpannableString generateCenterSpannableText() {
-        SpannableString spannableString = new SpannableString("Java_艾敏组\n倾情呈现");
+        SpannableString spannableString = new SpannableString("轻松分析");
         //spannableString.setSpan(new StyleSpan(Typeface.NORMAL), spannableString.length(), spannableString.length() - 15, 0);
         return spannableString;
     }
@@ -191,6 +201,114 @@ public class AnalyzeActivityIn extends AppCompatActivity implements OnChartValue
         pieChart.highlightValues(null);
         //刷新
         pieChart.invalidate();
+    }
+
+    private void setEntries(ArrayList<PieEntry> entries, String date, String selection) {
+        float sumSalary = 0, sumPartTime = 0, sumOthers = 0;
+        float sum = 0;
+        DecimalFormat format = new DecimalFormat("0.00");
+        //查询支出总和
+        Cursor cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, date + "=? and bool=?", new String[]{selection, "1"}, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+                sum += result;
+            }
+        }
+
+        //查询工资收入总和
+        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, date + "=? and type=?", new String[]{selection, "工资"}, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+                sumSalary += result;
+            }
+        }
+
+        //查询兼职收入总和
+        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, date + "=? and type=?", new String[]{selection, "兼职"}, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+                sumPartTime += result;
+            }
+        }
+
+        //查询其他收入总和
+        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, date + "=? and type=? and bool=?", new String[]{selection, "其他", "1"}, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+                sumOthers += result;
+            }
+        }
+
+        Float result = Float.parseFloat(format.format((sumSalary / sum) * 100));
+        entries.add(new PieEntry(result, "工资"));
+        result = Float.parseFloat(format.format((sumPartTime / sum) * 100));
+        entries.add(new PieEntry(result, "兼职"));
+        result = Float.parseFloat(format.format((sumOthers / sum) * 100));
+        entries.add(new PieEntry(result, "其他"));
+    }
+
+//    private void setEntriesMonth(ArrayList<PieEntry> entries) {
+//        float sumSalary = 0, sumPartTime = 0, sumOthers = 0;
+//        float sum = 0;
+//        DecimalFormat format = new DecimalFormat("0.00");
+//        //查询支出总和
+//        Cursor cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, "month=? and bool=?", new String[]{getMonthFormat(), "1"}, null, null, null);
+//        if (cursor != null) {
+//            while (cursor.moveToNext()) {
+//                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+//                sum += result;
+//            }
+//        }
+//
+//        //查询工资收入总和
+//        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, "month=? and type=?", new String[]{getMonthFormat(), "工资"}, null, null, null);
+//        if (cursor != null) {
+//            while (cursor.moveToNext()) {
+//                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+//                sumSalary += result;
+//            }
+//        }
+//
+//        //查询兼职收入总和
+//        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, "month=? and type=?", new String[]{getMonthFormat(), "兼职"}, null, null, null);
+//        if (cursor != null) {
+//            while (cursor.moveToNext()) {
+//                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+//                sumPartTime += result;
+//            }
+//        }
+//
+//        //查询其他收入总和
+//        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, new String[]{CommonDB.BILL_VALUE}, "month=? and type=? and bool=?", new String[]{getMonthFormat(), "其他", "1"}, null, null, null);
+//        if (cursor != null) {
+//            while (cursor.moveToNext()) {
+//                float result = cursor.getFloat(cursor.getColumnIndex("value"));
+//                sumOthers += result;
+//            }
+//        }
+//
+//        Float result = Float.parseFloat(format.format((sumSalary / sum) * 100));
+//        entries.add(new PieEntry(result, "工资"));
+//        result = Float.parseFloat(format.format((sumPartTime / sum) * 100));
+//        entries.add(new PieEntry(result, "兼职"));
+//        result = Float.parseFloat(format.format((sumOthers / sum) * 100));
+//        entries.add(new PieEntry(result, "其他"));
+//    }
+
+    private String getDayFormat() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        return format.format(date);
+    }
+
+    private String getMonthFormat() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
+        Date date = new Date();
+        return format.format(date);
     }
 
     private String getMonth() {

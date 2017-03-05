@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.ces.team.recorder.AboutApplicationActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_about_application"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <Button
+            android:id="@+id/btn_back_from_about_app"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@null"
+            android:gravity="start|center"
+            android:text="返回"
+            android:textColor="#fff"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="关于APP"
+            android:textColor="#fff"
+            android:textSize="20sp" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="center"
+        android:text="轻 轻 松 松 记"
+        android:textColor="#000"
+        android:textSize="25sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="嘛虽然是一个作业"
+        android:textColor="#000"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="但是我们还是希望给大家最好的用户体验"
+        android:textColor="#000"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="所以还是花了很多时间和心思哒"
+        android:textColor="#000"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="自由万岁"
+        android:textColor="#000"
+        android:textSize="16sp" />
+
+</LinearLayout>

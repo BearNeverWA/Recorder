@@ -35,18 +35,6 @@
             android:textColor="#fff"
             android:textSize="20sp" />
 
-        <!--<Button-->
-            <!--android:id="@+id/btn_confirm_add_new_bill"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_gravity="end"-->
-            <!--android:background="@null"-->
-            <!--android:gravity="end|center"-->
-            <!--android:paddingRight="15dp"-->
-            <!--android:text="保存"-->
-            <!--android:textColor="#fff"-->
-            <!--android:textSize="18sp" />-->
-
     </android.support.v7.widget.Toolbar>
 
     <RadioGroup

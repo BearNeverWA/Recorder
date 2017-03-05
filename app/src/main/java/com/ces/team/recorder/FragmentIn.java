@@ -115,11 +115,25 @@ public class FragmentIn extends Fragment {
         cv.put(CommonDB.BILL_BOOL,"1");
         cv.put(CommonDB.BILL_VALUE,s);
         cv.put(CommonDB.BILL_TIME,getTime());
+        cv.put(CommonDB.BILL_TIME_MONTH,getMonth());
+        cv.put(CommonDB.BILL_TIME_DAY,getDay());
         dbWriter.insert(CommonDB.BILL_TABLE_NAME,null,cv);
     }
 
     private String getTime(){
         SimpleDateFormat format=new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+        Date date=new Date();
+        return format.format(date);
+    }
+
+    private String getMonth(){
+        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM");
+        Date date=new Date();
+        return format.format(date);
+    }
+
+    private String getDay(){
+        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
         Date date=new Date();
         return format.format(date);
     }

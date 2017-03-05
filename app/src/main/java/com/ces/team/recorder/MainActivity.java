@@ -82,23 +82,21 @@ public class MainActivity extends AppCompatActivity {
 
         //隐藏菜单的内容设置
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setCheckedItem(R.id.test_one);
+        navigationView.setCheckedItem(R.id.about_application);
         //处理隐藏菜单的点击响应
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.test_one:
+                    case R.id.about_application:
                         drawerLayout.closeDrawers();
-                        Toast.makeText(MainActivity.this, "You Clicked TestOne", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, AboutApplicationActivity.class);
+                        startActivity(intent);
                         break;
-                    case R.id.test_two:
+                    case R.id.about_us:
                         drawerLayout.closeDrawers();
-                        Toast.makeText(MainActivity.this, "You Clicked TestTwo", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.test_three:
-                        drawerLayout.closeDrawers();
-                        Toast.makeText(MainActivity.this, "You Clicked TestThree", Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(MainActivity.this, AboutUsActivity.class);
+                        startActivity(i);
                         break;
                     default:
                 }
@@ -108,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void selectDB() {
-        cursor=dbReader.query(CommonDB.BILL_TABLE_NAME, null, null, null, null, null, CommonDB.BILL_ID + " desc");
+        cursor = dbReader.query(CommonDB.BILL_TABLE_NAME, null, null, null, null, null, CommonDB.BILL_ID + " desc");
         billAdapter = new BillAdapter(this, cursor);
         billList.setAdapter(billAdapter);
     }
